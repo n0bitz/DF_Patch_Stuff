@@ -139,7 +139,8 @@ do\
     for (i = 0; i < MAX_WEAPONS; i++) PARSE_ARG(ps->ammo[i], i);
     for (i = 0; i < MAX_POWERUPS; i++) {
         PARSE_ARG(ps->powerups[i], i);
-        if ((i == PW_REDFLAG || i == PW_BLUEFLAG) && ps->powerups[i])
+        if (!ps->powerups[i]) continue;
+        if (i == PW_REDFLAG || i == PW_BLUEFLAG)
             ps->powerups[i] = INT_MAX;
         else
             ps->powerups[i] += levelTime; // should be level.time (too lazy to verify struct layout hasn't changed)
