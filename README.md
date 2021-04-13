@@ -44,10 +44,24 @@ I would only use this for convenience (ie. when you don't have a bot/replayer or
   - You will restore with whatever ammo you had and everything
   - But the rocket/grenade/whatever you fired won't restore
   - It's possible to restore these, but at some point you are going to have to draw the line somewhere:
-    - ie. Are you going to restore the map state too? The way the doors/triggers/etc. were?
+    - Are you going to restore the way the doors/triggers/etc were?
     - Too much effort, too lazy, just believe in a replayer at that point
 
-- It might stop you from using proxymods that use compile-time offsets or checksum the VM
+- Restoring in fastcaps is a bit broken depending on how you view it:
+
+  Suppose:
+
+  - You are on the red team and have the blue flag
+  - You `savepos`, switch to blue team, and `vstr`
+
+  Then:
+
+  - You will restore as a blue team member holding the blue flag :D
+  - I'm not sure what the expected behavior would be for such a situation
+  - I could always restore you with the opposing team flag instead of whatever was saved at the time of `savepos`
+  - Too lazy though, you can manually toggle two bits in `<whatever>_items` for now
+
+- It might stop you from using proxymods/cheat engines that checksum the VM or have hardcoded pre 1.91.27 offsets
 
   - The data offsets for the patched VMs should be the same as the original VMs
 

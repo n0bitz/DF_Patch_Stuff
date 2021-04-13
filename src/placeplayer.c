@@ -131,13 +131,18 @@ do\
     for (i = 0; i < 3; i++) PARSE_ARG(origin[i], f);
     for (i = 0; i < 3; i++) PARSE_ARG(angles[i], f);
     for (i = 0; i < 3; i++) PARSE_ARG(velocity[i], f);
+    // DF technically does ent->client - level.clients,
+    // ent - g_entities is equivalent
     PARSE_ARG(timers[ent - (new_gentity_t *)g_entities].time, i);
     PARSE_ARG(timers[ent - (new_gentity_t *)g_entities].timer_running, i);
     PARSE_ARG(ps->weapon, i);
     for (i = 0; i < MAX_WEAPONS; i++) PARSE_ARG(ps->ammo[i], i);
     for (i = 0; i < MAX_POWERUPS; i++) {
         PARSE_ARG(ps->powerups[i], i);
-        ps->powerups[i] += levelTime; // should be level.time (too lazy to verify struct layout hasn't changed)
+        if ((i == PW_REDFLAG || i == PW_BLUEFLAG) && ps->powerups[i])
+            ps->powerups[i] = INT_MAX;
+        else
+            ps->powerups[i] += levelTime; // should be level.time (too lazy to verify struct layout hasn't changed)
     }
     PARSE_ARG(ps->stats[STAT_HEALTH], i);
     PARSE_ARG(ps->stats[STAT_ARMOR], i);

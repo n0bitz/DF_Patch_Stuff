@@ -47,8 +47,12 @@ do\
     DUMP_AND_SET(saveposname, "time", "%d", time_stuff);
     DUMP_AND_SET(saveposname, "weapon", "%d", &ps->weapon);
     DUMP_AND_SET(saveposname, "ammo", "%d", ps->ammo);
-    for (i = 0; i < MAX_POWERUPS; i++)
-        powerups[i] = (ps->powerups[i] < cg.time) ? 0 : ps->powerups[i] - cg.time;
+    for (i = 0; i < MAX_POWERUPS; i++) {
+        if ((i == PW_REDFLAG || i == PW_BLUEFLAG) && ps->powerups[i])
+            powerups[i] = 1;
+        else
+            powerups[i] = (ps->powerups[i] < cg.time) ? 0 : ps->powerups[i] - cg.time;
+    }
     DUMP_AND_SET(saveposname, "items", "%d", powerups);
     misc[0] = ps->stats[STAT_HEALTH];
     misc[1] = ps->stats[STAT_ARMOR];
