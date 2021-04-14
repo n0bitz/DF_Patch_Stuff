@@ -11,7 +11,7 @@ void CG_SavePos_f(void)
     playerState_t *ps;
     int powerups[MAX_POWERUPS];
     int time_stuff[2];
-    int misc[7];
+    int misc[8];
     int i;
 
     trap_Cvar_VariableStringBuffer("saveposname", saveposname, sizeof(saveposname));
@@ -28,15 +28,15 @@ void CG_SavePos_f(void)
     ps = &cg.snap->ps;
 
 // HELL AWAITS ME
-#define DUMP_AND_SET(prefix, str, spec, array) \
-do\
-{\
-    len = sprintf(set_cmd_str, "set %s_%s", (prefix), (str));\
-    for (i = 0; i < sizeof((array))/sizeof((array)[0]); i++)\
+#define DUMP_AND_SET(prefix, str, spec, array)                  \
+do                                                              \
+{                                                               \
+    len = sprintf(set_cmd_str, "set %s_%s", (prefix), (str));   \
+    for (i = 0; i < sizeof((array))/sizeof((array)[0]); i++)    \
         len += sprintf(set_cmd_str + len, " " spec, (array)[i]);\
-    sprintf(set_cmd_str + len, "\n");\
-    trap_SendConsoleCommand(set_cmd_str);\
-} while(0);\
+    sprintf(set_cmd_str + len, "\n");                           \
+    trap_SendConsoleCommand(set_cmd_str);                       \
+} while(0);                                                     \
 //#enddef
     DUMP_AND_SET(saveposname, "pos", "%f", ps->origin);
     DUMP_AND_SET(saveposname, "angles", "%f", ps->viewangles);
@@ -59,7 +59,8 @@ do\
     misc[3] = ps->pm_time;
     misc[4] = ps->weaponstate;
     misc[5] = ps->weaponTime;
-    misc[6] = ps->persistant[PERS_SCORE];
+    misc[6] = ps->stats[STAT_WEAPONS];
+    misc[7] = ps->persistant[PERS_SCORE];
     DUMP_AND_SET(saveposname, "misc", "%d", misc);
 #undef DUMP_AND_SET
 

@@ -113,7 +113,7 @@ void Cmd_PlacePlayer_f(new_gentity_t *ent)
         trap_SendServerCommand(ent - (new_gentity_t *)g_entities, "print \"Cheats are not enabled on this server.\n\"");
         return;
     }
-    if (trap_Argc() != 52) {
+    if (trap_Argc() != 53) {
         trap_SendServerCommand(ent - (new_gentity_t *)g_entities, "print \"Usage: Just use savepos please.\n\"");
         return;
     }
@@ -121,18 +121,18 @@ void Cmd_PlacePlayer_f(new_gentity_t *ent)
     len = 1;
 
 // HELL AWAITS ME
-#define PARSE_ARG(dest, type) \
-do\
-{\
+#define PARSE_ARG(dest, type)          \
+do                                     \
+{                                      \
     trap_Argv(len++, buf, sizeof(buf));\
-    (dest) = ato##type(buf);\
-} while (0); \
+    (dest) = ato##type(buf);           \
+} while (0);                           \
 //#enddef
     for (i = 0; i < 3; i++) PARSE_ARG(origin[i], f);
     for (i = 0; i < 3; i++) PARSE_ARG(angles[i], f);
     for (i = 0; i < 3; i++) PARSE_ARG(velocity[i], f);
-    // DF technically does ent->client - level.clients,
-    // ent - g_entities is equivalent
+    // DF technically does ent->client - level.clients in its get_timer function
+    // but the following is equivalent
     PARSE_ARG(timers[ent - (new_gentity_t *)g_entities].time, i);
     PARSE_ARG(timers[ent - (new_gentity_t *)g_entities].timer_running, i);
     PARSE_ARG(ps->weapon, i);
@@ -149,6 +149,7 @@ do\
     PARSE_ARG(ps->pm_time, i);
     PARSE_ARG(ps->weaponstate, i);
     PARSE_ARG(ps->weaponTime, i);
+    PARSE_ARG(ps->stats[STAT_WEAPONS], i);
     PARSE_ARG(ps->persistant[PERS_SCORE], i);
 #undef PARSE_ARG
 
