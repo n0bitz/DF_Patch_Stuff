@@ -96,7 +96,7 @@ typedef struct {
 extern int get_cheats_enabled(void);
 extern void placeplayer_teleport(new_gentity_t *, vec3_t, vec3_t, vec3_t);
 extern timerInfo_t timers[MAX_CLIENTS];
-extern int levelTime;
+extern int levelTime; // should be level.time (too lazy to verify struct layout hasn't changed)
 
 void Cmd_PlacePlayer_f(new_gentity_t *ent)
 {
@@ -139,11 +139,9 @@ do\
     for (i = 0; i < MAX_WEAPONS; i++) PARSE_ARG(ps->ammo[i], i);
     for (i = 0; i < MAX_POWERUPS; i++) {
         PARSE_ARG(ps->powerups[i], i);
-        if (!ps->powerups[i]) continue;
-        if (i == PW_REDFLAG || i == PW_BLUEFLAG)
-            ps->powerups[i] = INT_MAX;
-        else
-            ps->powerups[i] += levelTime; // should be level.time (too lazy to verify struct layout hasn't changed)
+        if (ps->powerups[i] == -1) ps->powerups[i] = 0;
+        else if (i == PW_REDFLAG || i == PW_BLUEFLAG) ps->powerups[i] = INT_MAX;
+        else ps->powerups[i] += levelTime;
     }
     PARSE_ARG(ps->stats[STAT_HEALTH], i);
     PARSE_ARG(ps->stats[STAT_ARMOR], i);
