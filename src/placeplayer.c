@@ -1,4 +1,6 @@
 #include "g_local.h"
+#define STAT_JUMPTIME 10
+#define STAT_DJING 11
 
 typedef struct new_gentity_s new_gentity_t;
 struct new_gentity_s {
@@ -113,7 +115,7 @@ void Cmd_PlacePlayer_f(new_gentity_t *ent)
         trap_SendServerCommand(ent - (new_gentity_t *)g_entities, "print \"Cheats are not enabled on this server.\n\"");
         return;
     }
-    if (trap_Argc() != 53) {
+    if (trap_Argc() != 55) {
         trap_SendServerCommand(ent - (new_gentity_t *)g_entities, "print \"Usage: Just use savepos please.\n\"");
         return;
     }
@@ -151,6 +153,8 @@ do                                     \
     PARSE_ARG(ps->weaponTime, i);
     PARSE_ARG(ps->stats[STAT_WEAPONS], i);
     PARSE_ARG(ps->persistant[PERS_SCORE], i);
+    PARSE_ARG(ps->stats[STAT_JUMPTIME], i);
+    PARSE_ARG(ps->stats[STAT_DJING], i);
 #undef PARSE_ARG
 
     ps->persistant[PERS_SPAWN_COUNT]++; // force client to change weapon via CG_Respawn

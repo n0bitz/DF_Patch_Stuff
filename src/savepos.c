@@ -1,4 +1,6 @@
 #include "cg_local.h"
+#define STAT_JUMPTIME 10
+#define STAT_DJING 11
 
 extern int decrypted_timer;
 
@@ -11,7 +13,7 @@ void CG_SavePos_f(void)
     playerState_t *ps;
     int powerups[MAX_POWERUPS];
     int time_stuff[2];
-    int misc[8];
+    int misc[10];
     int i;
 
     trap_Cvar_VariableStringBuffer("saveposname", saveposname, sizeof(saveposname));
@@ -61,6 +63,8 @@ do                                                              \
     misc[5] = ps->weaponTime;
     misc[6] = ps->stats[STAT_WEAPONS];
     misc[7] = ps->persistant[PERS_SCORE];
+    misc[8] = ps->stats[STAT_JUMPTIME];
+    misc[9] = ps->stats[STAT_DJING];
     DUMP_AND_SET(saveposname, "misc", "%d", misc);
 #undef DUMP_AND_SET
 
