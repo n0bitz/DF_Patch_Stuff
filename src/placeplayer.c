@@ -152,6 +152,7 @@ do\
     PARSE_ARG(ps->persistant[PERS_SCORE], i);
 #undef PARSE_ARG
 
+    ps->persistant[PERS_SPAWN_COUNT]++; // force client to change weapon via CG_Respawn
     placeplayer_teleport(ent, origin, angles, velocity);
     trap_SendServerCommand(ent - (new_gentity_t *)g_entities, "print \"^3Restored\n\"");
 }
