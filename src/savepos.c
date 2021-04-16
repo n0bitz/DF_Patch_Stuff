@@ -73,3 +73,25 @@ do                                                              \
     trap_SendConsoleCommand(set_cmd_str);
     CG_Printf("^2Saved\n");
 }
+
+// We don't need trap_AddCommand for placeplayer as DF does it for autocomplete
+void CG_PlacePlayer_f(void) {
+    char buf[MAX_TOKEN_CHARS];
+
+    trap_Argv(12, buf, sizeof(buf));
+    cg.weaponSelect = atoi(buf);
+    cg.weaponSelectTime = cg.time; // probably isn't needed
+    // send the weapon we want to restore not the old one
+    trap_SetUserCmdValue(cg.weaponSelect, cg.zoomSensitivity);
+}
+
+qboolean CG_ConsoleCommand_cust(void) {
+    char cmd[MAX_TOKEN_CHARS];
+
+    if (CG_ConsoleCommand()) return qtrue;
+    trap_Argv(0, cmd, sizeof(cmd));
+    if (!Q_stricmp(cmd, "placeplayer")) {
+        CG_PlacePlayer_f(); // intercept placeplayer but let it pass to server
+    }
+    return qfalse;
+}
