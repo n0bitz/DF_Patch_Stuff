@@ -95,10 +95,10 @@ typedef struct {
     int num_checkpoints;
 } timerInfo_t;
 
+extern int levelTime; // should be level.time (too lazy to verify struct layout hasn't changed)
+extern timerInfo_t timers[MAX_CLIENTS];
 extern int get_cheats_enabled(void);
 extern void placeplayer_teleport(new_gentity_t *, vec3_t, vec3_t, vec3_t);
-extern timerInfo_t timers[MAX_CLIENTS];
-extern int levelTime; // should be level.time (too lazy to verify struct layout hasn't changed)
 
 void Cmd_PlacePlayer_f(new_gentity_t *ent) {
     const char *s;

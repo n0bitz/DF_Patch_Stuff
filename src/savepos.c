@@ -4,6 +4,7 @@
 
 extern int decrypted_timer;
 int sprintf(char *, const char *, ...);
+int DecryptTimerWithoutAlteringTheGlobal(snapshot_t *);
 
 void CG_SavePos_f(void) {
     char saveposname[MAX_TOKEN_CHARS];
@@ -42,7 +43,7 @@ do {                                                              \
     DUMP_AND_SET(ps->origin, f, saveposname, "pos");
     DUMP_AND_SET(ps->viewangles, f, saveposname, "angles");
     DUMP_AND_SET(ps->velocity, f, saveposname, "vel");
-    time_stuff[0] = decrypted_timer;
+    time_stuff[0] = DecryptTimerWithoutAlteringTheGlobal(cg.snap);
     time_stuff[1] = !!(ps->stats[12] & 2);
     DUMP_AND_SET(time_stuff, i, saveposname, "time");
     DUMP_AND_SET(&ps->weapon, i, saveposname, "weapon");
@@ -92,6 +93,16 @@ qboolean CG_ConsoleCommand_cust(void) {
     // intercept placeplayer but let it pass to the server after we're done
     if (!Q_stricmp(cmd, "placeplayer")) CG_PlacePlayer_f();
     return qfalse;
+}
+
+int DecryptTimerWithoutAlteringTheGlobal(snapshot_t *snap) {
+    int tmp;
+    int time;
+
+    tmp = decrypted_timer;
+    time = DecryptTimer(snap, NULL);
+    decrypted_timer = tmp;
+    return time;
 }
 
 int sprintf(char *buf, const char *fmt, ...) {
