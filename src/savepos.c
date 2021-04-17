@@ -68,7 +68,7 @@ do {                                                              \
     DUMP_AND_SET(misc, i, saveposname, "misc");
 #undef DUMP_AND_SET
 
-    sprintf(set_cmd_str, "set %s varCommand placeplayer $%s_pos $%s_angles $%s_vel $%s_time $%s_weapon $%s_ammo $%s_items $%s_misc\n",
+    sprintf(set_cmd_str, "set %s silent varCommand placeplayer $%s_pos $%s_angles $%s_vel $%s_time $%s_weapon $%s_ammo $%s_items $%s_misc\n",
             saveposname, saveposname, saveposname, saveposname, saveposname, saveposname, saveposname, saveposname, saveposname);
     trap_SendConsoleCommand(set_cmd_str);
     CG_Printf("^2Saved\n");
