@@ -10,8 +10,8 @@ qvm.rename_sub(0x1acf4, "CG_ConsoleCommand")
 qvm.rename_sub(0x23c, "CG_Printf")
 qvm.rename_var(0x11d31c, "decrypted_timer")
 qvm.rename_sub(0x324d6, "Q_stricmp")
-qvm.rename_sub(0x77b6, "sprintf")
 qvm.rename_sub(0x2f1b8, "strlen")
+qvm.rename_sub(0x2f8c7, "vsprintf")
 
 with open("savepos.c", "r") as f:
 	symbols = qvm.append_c_code(f.read())

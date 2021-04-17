@@ -3,9 +3,9 @@
 #define STAT_DJING 11
 
 extern int decrypted_timer;
+int sprintf(char *, const char *, ...);
 
-void CG_SavePos_f(void)
-{
+void CG_SavePos_f(void) {
     char saveposname[MAX_TOKEN_CHARS];
     int saveposname_len;
     char set_cmd_str[MAX_TOKEN_CHARS];
@@ -30,31 +30,30 @@ void CG_SavePos_f(void)
     ps = &cg.snap->ps;
 
 // HELL AWAITS ME
-#define DUMP_AND_SET(prefix, str, spec, array)                  \
-do                                                              \
-{                                                               \
-    len = sprintf(set_cmd_str, "set %s_%s", (prefix), (str));   \
-    for (i = 0; i < sizeof((array))/sizeof((array)[0]); i++)    \
-        len += sprintf(set_cmd_str + len, " " spec, (array)[i]);\
-    sprintf(set_cmd_str + len, "\n");                           \
-    trap_SendConsoleCommand(set_cmd_str);                       \
-} while(0);                                                     \
+#define DUMP_AND_SET(array, type, prefix, str)                    \
+do {                                                              \
+    len = sprintf(set_cmd_str, "set %s_%s", (prefix), (str));     \
+    for (i = 0; i < sizeof((array))/sizeof((array)[0]); i++)      \
+        len += sprintf(set_cmd_str + len, " %" #type, (array)[i]);\
+    sprintf(set_cmd_str + len, "\n");                             \
+    trap_SendConsoleCommand(set_cmd_str);                         \
+} while(0);                                                       \
 //#enddef
-    DUMP_AND_SET(saveposname, "pos", "%f", ps->origin);
-    DUMP_AND_SET(saveposname, "angles", "%f", ps->viewangles);
-    DUMP_AND_SET(saveposname, "vel", "%f", ps->velocity);
+    DUMP_AND_SET(ps->origin, f, saveposname, "pos");
+    DUMP_AND_SET(ps->viewangles, f, saveposname, "angles");
+    DUMP_AND_SET(ps->velocity, f, saveposname, "vel");
     time_stuff[0] = decrypted_timer;
     time_stuff[1] = !!(ps->stats[12] & 2);
-    DUMP_AND_SET(saveposname, "time", "%d", time_stuff);
-    DUMP_AND_SET(saveposname, "weapon", "%d", &ps->weapon);
-    DUMP_AND_SET(saveposname, "ammo", "%d", ps->ammo);
+    DUMP_AND_SET(time_stuff, i, saveposname, "time");
+    DUMP_AND_SET(&ps->weapon, i, saveposname, "weapon");
+    DUMP_AND_SET(ps->ammo, i, saveposname, "ammo");
     for (i = 0; i < MAX_POWERUPS; i++) {
         powerups[i] = ps->powerups[i];
         if (!powerups[i]) powerups[i] = -1;
         else if (i == PW_REDFLAG || i == PW_BLUEFLAG) powerups[i] = 1;
         else powerups[i] -= cg.time;
     }
-    DUMP_AND_SET(saveposname, "items", "%d", powerups);
+    DUMP_AND_SET(powerups, i, saveposname, "items");
     misc[0] = ps->stats[STAT_HEALTH];
     misc[1] = ps->stats[STAT_ARMOR];
     misc[2] = ps->pm_flags;
@@ -65,7 +64,7 @@ do                                                              \
     misc[7] = ps->persistant[PERS_SCORE];
     misc[8] = ps->stats[STAT_JUMPTIME];
     misc[9] = ps->stats[STAT_DJING];
-    DUMP_AND_SET(saveposname, "misc", "%d", misc);
+    DUMP_AND_SET(misc, i, saveposname, "misc");
 #undef DUMP_AND_SET
 
     sprintf(set_cmd_str, "set %s varCommand placeplayer $%s_pos $%s_angles $%s_vel $%s_time $%s_weapon $%s_ammo $%s_items $%s_misc\n",
@@ -90,8 +89,14 @@ qboolean CG_ConsoleCommand_cust(void) {
 
     if (CG_ConsoleCommand()) return qtrue;
     trap_Argv(0, cmd, sizeof(cmd));
-    if (!Q_stricmp(cmd, "placeplayer")) {
-        CG_PlacePlayer_f(); // intercept placeplayer but let it pass to server
-    }
+    // intercept placeplayer but let it pass to the server after we're done
+    if (!Q_stricmp(cmd, "placeplayer")) CG_PlacePlayer_f();
     return qfalse;
+}
+
+int sprintf(char *buf, const char *fmt, ...) {
+    va_list argptr;
+
+    va_start(argptr, fmt);
+    return vsprintf(buf, fmt, argptr);
 }

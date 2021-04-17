@@ -100,8 +100,7 @@ extern void placeplayer_teleport(new_gentity_t *, vec3_t, vec3_t, vec3_t);
 extern timerInfo_t timers[MAX_CLIENTS];
 extern int levelTime; // should be level.time (too lazy to verify struct layout hasn't changed)
 
-void Cmd_PlacePlayer_f(new_gentity_t *ent)
-{
+void Cmd_PlacePlayer_f(new_gentity_t *ent) {
     const char *s;
     int i;
     int len;
@@ -124,8 +123,7 @@ void Cmd_PlacePlayer_f(new_gentity_t *ent)
 
 // HELL AWAITS ME
 #define PARSE_ARG(dest, type)          \
-do                                     \
-{                                      \
+do {                                   \
     trap_Argv(len++, buf, sizeof(buf));\
     (dest) = ato##type(buf);           \
 } while (0);                           \
