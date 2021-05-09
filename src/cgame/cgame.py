@@ -1,5 +1,4 @@
 from quatch import Qvm
-from quatch.instruction import Opcode
 from struct import pack
 from json import load as load_json
 
