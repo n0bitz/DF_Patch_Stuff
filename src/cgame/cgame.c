@@ -3,6 +3,8 @@
 #define STAT_DJING 11
 
 extern int decrypted_timer;
+extern void CG_Grapple(centity_t *);
+extern qboolean SomeNoDrawRadiusChecks(centity_t *);
 int sprintf(char *, const char *, ...);
 int DecryptTimerWithoutAlteringTheGlobal(snapshot_t *);
 
@@ -112,6 +114,32 @@ int DecryptTimerWithoutAlteringTheGlobal(snapshot_t *snap) {
     time = DecryptTimer(snap, NULL);
     decrypted_timer = tmp;
     return time;
+}
+
+qboolean SomeNoDrawRadiusChecks_Hook(centity_t *cent) {
+    // The real fix for hook coloring is to set clientNum in fire_grapple in qagame code.
+    // This can be removed once DeFRaG fixes qagame and server runners update.
+    if (cent->currentState.weapon == WP_GRAPPLING_HOOK)
+        cent->currentState.clientNum = cent->currentState.otherEntityNum;
+    return SomeNoDrawRadiusChecks(cent);
+}
+
+void CG_Grapple_Hook(centity_t *cent) {
+    qboolean draw;
+
+    // When hooked on to something, the eType is ET_GRAPPLE. DeFRaG doesn't do
+    // multiplayer no draw radius checks for ET_GRAPPLE though, and you can see
+    // other hooks that are hooked. We don't want that, so I'm doing the checks
+    // here in CG_Grapple (for convenience). When fixing this in DeFRaG,
+    // it's probably a good idea to instead:
+    //     1. In CG_AddCEntity, for ET_GRAPPLE, call the same no draw radius checking
+    //     function used for ET_MISSILE.
+    //     2. Update that no draw radius checking function to check for ET_GRAPPLE or
+    //     ET_MISSILE instead of just the latter.
+    cent->currentState.eType = ET_MISSILE;
+    draw = !SomeNoDrawRadiusChecks_Hook(cent);
+    cent->currentState.eType = ET_GRAPPLE;
+    if (draw) CG_Grapple(cent);
 }
 
 int sprintf(char *buf, const char *fmt, ...) {

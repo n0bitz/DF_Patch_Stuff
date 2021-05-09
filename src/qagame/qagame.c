@@ -73,8 +73,9 @@ struct new_gentity_s {
     float wait;
     float random;
     gitem_t *item;
-    int unknown;
+    int unknown_ptr;
     int waittable[64];
+    int unknown[4]; // seeing some stuff in G_UseTargets, possibly due to nicemap3?
 };
 
 typedef enum {
@@ -172,4 +173,10 @@ void ClientCommand_Hook(int clientNum) {
         return;
     }
     ClientCommand(clientNum);
+}
+
+new_gentity_t *fire_grapple_Hook(new_gentity_t *self, vec3_t start, vec3_t dir) {
+    new_gentity_t *hook = (void*)fire_grapple((void*)self, start, dir);
+    hook->s.clientNum = self->s.number;
+    return hook;
 }

@@ -1,5 +1,5 @@
 # DF_Patch_Stuff
-Some patches for DeFRaG. Pretty much only contains custom `savestate` and `restorestate` commands for now. They can save/restore:
+Some patches for DeFRaG. Pretty much only contains grappling hook trail fixes and custom `savestate` and `restorestate` commands for now. The custom commands can save/restore:
 
 - Timer
 - Health
