@@ -100,7 +100,7 @@ extern timerInfo_t timers[MAX_CLIENTS];
 extern int get_cheats_enabled(void);
 extern void placeplayer_teleport(new_gentity_t *, vec3_t, vec3_t, vec3_t);
 
-void Cmd_PlacePlayer_f(new_gentity_t *ent) {
+void Cmd_RestoreState_f(new_gentity_t *ent) {
     const char *s;
     int i;
     int len;
@@ -115,7 +115,7 @@ void Cmd_PlacePlayer_f(new_gentity_t *ent) {
         return;
     }
     if (trap_Argc() != 55) {
-        trap_SendServerCommand(ent - (new_gentity_t *)g_entities, "print \"Usage: Just use savepos please.\n\"");
+        trap_SendServerCommand(ent - (new_gentity_t *)g_entities, "print \"Usage: Just use savestate please.\n\"");
         return;
     }
     ps = &ent->client->ps;
@@ -126,7 +126,7 @@ void Cmd_PlacePlayer_f(new_gentity_t *ent) {
 do {                                   \
     trap_Argv(len++, buf, sizeof(buf));\
     (dest) = ato##type(buf);           \
-} while (0);                           \
+} while (0);
 //#enddef
     for (i = 0; i < 3; i++) PARSE_ARG(origin[i], f);
     for (i = 0; i < 3; i++) PARSE_ARG(angles[i], f);
@@ -158,4 +158,18 @@ do {                                   \
 
     placeplayer_teleport(ent, origin, angles, velocity);
     trap_SendServerCommand(ent - (new_gentity_t *)g_entities, "print \"^3Restored\n\"");
+}
+
+void ClientCommand_Hook(int clientNum) {
+    new_gentity_t *ent;
+    char cmd[MAX_TOKEN_CHARS];
+
+    ent = (new_gentity_t *)g_entities + clientNum;
+    if (!ent->client) return; // not fully in game yet
+    trap_Argv(0, cmd, sizeof(cmd));
+    if (!Q_stricmp(cmd, "restorestate")) {
+        Cmd_RestoreState_f(ent);
+        return;
+    }
+    ClientCommand(clientNum);
 }
