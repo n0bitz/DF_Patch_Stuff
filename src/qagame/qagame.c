@@ -2,8 +2,8 @@
 #define STAT_JUMPTIME 10
 #define STAT_DJING 11
 
-typedef struct new_gentity_s new_gentity_t;
-struct new_gentity_s {
+typedef struct gentity_s gentity_t;
+struct gentity_s {
     entityState_t s;
     entityShared_t r;
     gclient_t *client;
@@ -27,9 +27,9 @@ struct new_gentity_s {
     int sound2to1;
     int soundPos2;
     int soundLoop;
-    new_gentity_t *parent;
-    new_gentity_t *nextTrain;
-    new_gentity_t *prevTrain;
+    gentity_t *parent;
+    gentity_t *nextTrain;
+    gentity_t *prevTrain;
     vec3_t pos1;
     vec3_t pos2;
     char *message;
@@ -40,17 +40,17 @@ struct new_gentity_s {
     char *team;
     char *targetShaderName;
     char *targetShaderNewName;
-    new_gentity_t *target_ent;
+    gentity_t *target_ent;
     float speed;
     vec3_t movedir;
     int nextthink;
-    void (*think)(new_gentity_t *);
-    void (*reached)(new_gentity_t *);
-    void (*blocked)(new_gentity_t *, new_gentity_t *);
-    void (*touch)(new_gentity_t *, new_gentity_t *, trace_t *);
-    void (*use)(new_gentity_t *, new_gentity_t *, new_gentity_t *);
-    void (*pain)(new_gentity_t *, new_gentity_t *, int);
-    void (*die)(new_gentity_t *, new_gentity_t *, new_gentity_t *, int, int);
+    void (*think)(gentity_t *);
+    void (*reached)(gentity_t *);
+    void (*blocked)(gentity_t *, gentity_t *);
+    void (*touch)(gentity_t *, gentity_t *, trace_t *);
+    void (*use)(gentity_t *, gentity_t *, gentity_t *);
+    void (*pain)(gentity_t *, gentity_t *, int);
+    void (*die)(gentity_t *, gentity_t *, gentity_t *, int, int);
     int pain_debounce_time;
     int fly_sound_debounce_time;
     int last_move_time;
@@ -62,11 +62,11 @@ struct new_gentity_s {
     int methodOfDeath;
     int splashMethodOfDeath;
     int count;
-    new_gentity_t *chain;
-    new_gentity_t *enemy;
-    new_gentity_t *activator;
-    new_gentity_t *teamchain;
-    new_gentity_t *teammaster;
+    gentity_t *chain;
+    gentity_t *enemy;
+    gentity_t *activator;
+    gentity_t *teamchain;
+    gentity_t *teammaster;
     int watertype;
     int waterlevel;
     int noise_index;
@@ -99,9 +99,9 @@ typedef struct {
 extern int levelTime; // should be level.time (too lazy to verify struct layout hasn't changed)
 extern timerInfo_t timers[MAX_CLIENTS];
 extern int get_cheats_enabled(void);
-extern void placeplayer_teleport(new_gentity_t *, vec3_t, vec3_t, vec3_t);
+extern void placeplayer_teleport(gentity_t *, vec3_t, vec3_t, vec3_t);
 
-void Cmd_RestoreState_f(new_gentity_t *ent) {
+void Cmd_RestoreState_f(gentity_t *ent) {
     const char *s;
     int i;
     int len;
@@ -112,11 +112,11 @@ void Cmd_RestoreState_f(new_gentity_t *ent) {
     playerState_t *ps;
 
     if (!get_cheats_enabled()) {
-        trap_SendServerCommand(ent - (new_gentity_t *)g_entities, "print \"Cheats are not enabled on this server.\n\"");
+        trap_SendServerCommand(ent - g_entities, "print \"Cheats are not enabled on this server.\n\"");
         return;
     }
     if (trap_Argc() != 55) {
-        trap_SendServerCommand(ent - (new_gentity_t *)g_entities, "print \"Usage: Just use savestate please.\n\"");
+        trap_SendServerCommand(ent - g_entities, "print \"Usage: Just use savestate please.\n\"");
         return;
     }
     ps = &ent->client->ps;
@@ -134,8 +134,8 @@ do {                                   \
     for (i = 0; i < 3; i++) PARSE_ARG(velocity[i], f);
     // DF technically does ent->client - level.clients in its get_timer function
     // but the following is equivalent
-    PARSE_ARG(timers[ent - (new_gentity_t *)g_entities].time, i);
-    PARSE_ARG(timers[ent - (new_gentity_t *)g_entities].timer_running, i);
+    PARSE_ARG(timers[ent - g_entities].time, i);
+    PARSE_ARG(timers[ent - g_entities].timer_running, i);
     PARSE_ARG(ps->weapon, i);
     for (i = 0; i < MAX_WEAPONS; i++) PARSE_ARG(ps->ammo[i], i);
     for (i = 0; i < MAX_POWERUPS; i++) {
@@ -158,14 +158,14 @@ do {                                   \
 #undef PARSE_ARG
 
     placeplayer_teleport(ent, origin, angles, velocity);
-    trap_SendServerCommand(ent - (new_gentity_t *)g_entities, "print \"^3Restored\n\"");
+    trap_SendServerCommand(ent - g_entities, "print \"^3Restored\n\"");
 }
 
 void ClientCommand_Hook(int clientNum) {
-    new_gentity_t *ent;
+    gentity_t *ent;
     char cmd[MAX_TOKEN_CHARS];
 
-    ent = (new_gentity_t *)g_entities + clientNum;
+    ent = g_entities + clientNum;
     if (!ent->client) return; // not fully in game yet
     trap_Argv(0, cmd, sizeof(cmd));
     if (!Q_stricmp(cmd, "restorestate")) {
@@ -175,8 +175,8 @@ void ClientCommand_Hook(int clientNum) {
     ClientCommand(clientNum);
 }
 
-new_gentity_t *fire_grapple_Hook(new_gentity_t *self, vec3_t start, vec3_t dir) {
-    new_gentity_t *hook = (void*)fire_grapple((void*)self, start, dir);
+gentity_t *fire_grapple_Hook(gentity_t *self, vec3_t start, vec3_t dir) {
+    gentity_t *hook = fire_grapple(self, start, dir);
     hook->s.clientNum = self->s.number;
     return hook;
 }

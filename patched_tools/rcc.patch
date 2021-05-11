@@ -1,0 +1,38 @@
+diff --git a/src/decl.c b/src/decl.c
+index c9c35c3..55be012 100644
+--- a/src/decl.c
++++ b/src/decl.c
+@@ -178,11 +178,15 @@ static void decl(Symbol (*dcl)(int, char *, Type, Coordinate *)) {
+ 			else if (sclass == TYPEDEF)
+ 				{
+ 					Symbol p = lookup(id, identifiers);
+-					if (p && p->scope == level)
+-						error("redeclaration of `%s'\n", id);
++					if (p && p->scope == level) {
++						warning("redeclaration of `%s'\n", id);
++						memcpy(p->type, ty1, sizeof(*ty1));
++						goto skipped;
++					}
+ 					p = install(id, &identifiers, level,
+ 						level < LOCAL ? PERM : FUNC);
+ 					p->type = ty1;
++					skipped:
+ 					p->sclass = TYPEDEF;
+ 					p->src = pos;
+ 				}
+diff --git a/src/types.c b/src/types.c
+index c664571..3bdc2c9 100644
+--- a/src/types.c
++++ b/src/types.c
+@@ -279,8 +279,10 @@ Type newstruct(int op, char *tag) {
+ 		|| p->scope == PARAM && level == PARAM+1)) {
+ 			if (p->type->op == op && !p->defined)
+ 				return p->type;
+-			error("redefinition of `%s' previously defined at %w\n",
++			warning("redefinition of `%s' previously defined at %w\n",
+ 				p->name, &p->src);
++			memset(&p->u.s, 0, sizeof(p->u.s));
++			return p->type;
+ 		}
+ 	p = install(tag, &types, level, PERM);
+ 	p->type = type(op, NULL, 0, 0, p);
