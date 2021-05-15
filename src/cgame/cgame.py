@@ -25,7 +25,7 @@ qvm = Qvm("../../vms/DF 1.91.27/cgame.qvm", symbols)
 with open("cgame.c", "r") as f:
 	qvm.add_c_code(f.read(), ["../vanilla_29_sdk/cgame", "../vanilla_29_sdk/game"])
 qvm.replace_calls("CG_ConsoleCommand", "CG_ConsoleCommand_Hook")
-qvm.replace_calls("CG_InitConsoleCommands", "CG_ConsoleCommand_Hook")
+qvm.replace_calls("CG_InitConsoleCommands", "CG_InitConsoleCommands_Hook")
 qvm.replace_calls("CG_Grapple", "CG_Grapple_Hook")
 qvm.replace_calls("SomeNoDrawRadiusChecks", "SomeNoDrawRadiusChecks_Hook")
 qvm.write("cgame.qvm")
