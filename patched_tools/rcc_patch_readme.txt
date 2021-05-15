@@ -25,8 +25,6 @@ decl typedef case patch:
         00002c25 eb 3c           JMP        LAB_00002c63
 
 
-
-
 newstruct patch:
         0000f290 8b 45 fc        MOV        EAX, dword ptr [EBP + -0x4]
         0000f293 31 c9           XOR        ECX, ECX
@@ -35,6 +33,3 @@ newstruct patch:
         0000f29b 89 48 38        MOV        dword ptr [EAX + 0x38], ECX
         0000f29e 83 c0 08        ADD        EAX, 0x8
         0000f2a1 eb 71           JMP        LAB_0000f314
-
-
-
