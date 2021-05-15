@@ -21,10 +21,10 @@ index c9c35c3..55be012 100644
  					p->src = pos;
  				}
 diff --git a/src/types.c b/src/types.c
-index c664571..3bdc2c9 100644
+index c664571..321831d 100644
 --- a/src/types.c
 +++ b/src/types.c
-@@ -279,8 +279,10 @@ Type newstruct(int op, char *tag) {
+@@ -279,13 +279,16 @@ Type newstruct(int op, char *tag) {
  		|| p->scope == PARAM && level == PARAM+1)) {
  			if (p->type->op == op && !p->defined)
  				return p->type;
@@ -32,7 +32,13 @@ index c664571..3bdc2c9 100644
 +			warning("redefinition of `%s' previously defined at %w\n",
  				p->name, &p->src);
 +			memset(&p->u.s, 0, sizeof(p->u.s));
-+			return p->type;
++			goto skipped;
  		}
  	p = install(tag, &types, level, PERM);
  	p->type = type(op, NULL, 0, 0, p);
+ 	if (p->scope > maxlevel)
+ 		maxlevel = p->scope;
++	skipped:
+ 	p->src = src;
+ 	return p->type;
+ }

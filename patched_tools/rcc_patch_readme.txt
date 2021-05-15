@@ -28,12 +28,13 @@ decl typedef case patch:
 
 
 newstruct patch:
+        0000f290 8b 45 fc        MOV        EAX, dword ptr [EBP + -0x4]
         0000f293 31 c9           XOR        ECX, ECX
-        0000f295 89 4a 30        MOV        dword ptr [EDX + 0x30], ECX
-        0000f298 89 4a 34        MOV        dword ptr [EDX + 0x34], ECX
-        0000f29b 89 4a 38        MOV        dword ptr [EDX + 0x38], ECX
-        0000f29e 8b 42 24        MOV        EAX, dword ptr [EDX + 0x24]
-        0000f2a1 e9 7d 00        JMP        LAB_0000f323
-                 00 00
+        0000f295 89 48 30        MOV        dword ptr [EAX + 0x30], ECX
+        0000f298 89 48 34        MOV        dword ptr [EAX + 0x34], ECX
+        0000f29b 89 48 38        MOV        dword ptr [EAX + 0x38], ECX
+        0000f29e 83 c0 08        ADD        EAX, 0x8
+        0000f2a1 eb 71           JMP        LAB_0000f314
+
 
 
