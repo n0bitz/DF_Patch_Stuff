@@ -180,3 +180,21 @@ new_gentity_t *fire_grapple_Hook(new_gentity_t *self, vec3_t start, vec3_t dir) 
     hook->s.clientNum = self->s.number;
     return hook;
 }
+
+void G_Say_Hook(new_gentity_t *ent, gentity_t *target, int mode, const char *chatText) {
+    int clientNum;
+
+    // DeFRaG's ignore checking function is incorrectly called in G_Say with
+    // `ent->client->ps.clientNum`. That is not always the client num of the client.
+    // For example when the client is follow spectating another player,
+    // it's that of the client being follow spectated.
+    // I temporarily set `ent->client->ps.clientNum` to the right thing,
+    // so the ignore logic works. This is not the right solution, it's just
+    // convenient when patching. When fixing this in DeFRaG, it's probably a
+    // good idea to instead call the ignore checking function with the right
+    // client number (ie. `ent - g_entities` or `ent->client - level.clients`).
+    clientNum = ent->client->ps.clientNum;
+    ent->client->ps.clientNum = ent - (new_gentity_t *)g_entities;
+    G_Say(ent, target, mode, chatText);
+    ent->client->ps.clientNum = clientNum;
+}
