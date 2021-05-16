@@ -190,7 +190,7 @@ void G_Say_Hook(new_gentity_t *ent, gentity_t *target, int mode, const char *cha
     // it's that of the client being follow spectated.
     // I temporarily set `ent->client->ps.clientNum` to the right thing,
     // so the ignore logic works. This is not the right solution, it's just
-    // convinient when patching. When fixing this in DeFRaG, it's probably a
+    // convenient when patching. When fixing this in DeFRaG, it's probably a
     // good idea to instead call the ignore checking function with the right
     // client number (ie. `ent - g_entities` or `ent->client - level.clients`).
     clientNum = ent->client->ps.clientNum;
