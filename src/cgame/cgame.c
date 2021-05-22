@@ -37,7 +37,7 @@ void CG_SaveState_f(void)
         sprintf(set_cmd_str + len, "\n");                              \
         trap_SendConsoleCommand(set_cmd_str);                          \
     } while (0);
-    //#enddef
+
     DUMP_AND_SET(ps->origin, f, savestatename, "pos");
     DUMP_AND_SET(ps->viewangles, f, savestatename, "angles");
     DUMP_AND_SET(ps->velocity, f, savestatename, "vel");

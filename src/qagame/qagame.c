@@ -31,7 +31,7 @@ void Cmd_RestoreState_f(gentity_t *ent)
         trap_Argv(len++, buf, sizeof(buf)); \
         (dest) = ato##type(buf);            \
     } while (0);
-    //#enddef
+
     for (i = 0; i < 3; i++)
         PARSE_ARG(origin[i], f);
     for (i = 0; i < 3; i++)

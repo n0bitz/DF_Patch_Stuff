@@ -156,8 +156,8 @@ struct gentity_s {
 
 	gitem_t		*item;			// for bonus items
 	int 		unknown_ptr;
-    int 		waittable[64];
-    int 		unknown[4]; // seeing some stuff in G_UseTargets, possibly due to nicemap3?
+	int 		waittable[64];
+	int 		unknown[4]; // seeing some stuff in G_UseTargets, possibly due to nicemap3?
 };
 
 
