@@ -152,3 +152,16 @@ void target_laser_think_Hook(gentity_t *self)
     trap_LinkEntity(self);
     self->nextthink = levelTime + FRAMETIME;
 }
+
+void ClientSpawnEntSetStuff_Hook(gentity_t *ent)
+{
+    int interferenceOff;
+
+    // When fixing this in DeFRaG, it should be straightforward.
+    // Just set ent->clipmask to the right thing in ClientSpawn or
+    // one of the things it calls maybe, like the following.
+    ClientSpawnEntSetStuff(ent);
+    interferenceOff = trap_Cvar_VariableIntegerValue("df_mp_interferenceOff");
+    if (interferenceOff & 1)
+        ent->clipmask &= ~CONTENTS_BODY;
+}

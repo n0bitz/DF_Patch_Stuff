@@ -22,5 +22,6 @@ typedef struct
 
 extern int levelTime; // should be level.time (too lazy to verify struct layout hasn't changed)
 extern timerInfo_t timers[MAX_CLIENTS];
+extern void ClientSpawnEntSetStuff(gentity_t *);
 extern int get_cheats_enabled(void);
 extern void placeplayer_teleport(gentity_t *, vec3_t, vec3_t, vec3_t);

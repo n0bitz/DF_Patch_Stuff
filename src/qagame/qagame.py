@@ -11,6 +11,7 @@ symbols = {
     "atof": 0x5d6d,
     "atoi": 0x5efd,
     "ClientCommand": 0x1f3c3,
+    "ClientSpawnEntSetStuff": 0x2722,
     "fire_grapple": 0x228ee,
     "G_Damage": 0x20074,
     "G_InitGame": 0x2b7,
