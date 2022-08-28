@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '>=3.7'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+      - name: Build cgame patches
+        run: python src/cgame/cgame.py
+      - name: Build qagame patches
+        run: python src/qagame/qagame.py
+      - name: Create nightly tag
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: nightly
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload artifacts to nightly
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: nightly
+          body: Download the latest patched VMs.
+          prerelease: true
+          fail_on_unmatched_files: true
+          files: |
+            build/qagame.qvm
+            build/cgame.qvm

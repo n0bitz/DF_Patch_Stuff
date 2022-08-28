@@ -1,6 +1,8 @@
 from quatch import Qvm
-from struct import pack
 from json import load as load_json
+from pathlib import PurePath
+
+DIR = PurePath(__file__).parent
 
 symbols = {
     # DATA
@@ -22,16 +24,16 @@ symbols = {
     "vsprintf": 0x2f8c7
 }
 
-with open("syscalls.json", "r") as f:
+with open(DIR.joinpath("syscalls.json"), "r") as f:
     symbols.update(load_json(f))
 
-qvm = Qvm("../../vms/DF 1.91.27/cgame.qvm", symbols)
-with open("cgame.c", "r") as f:
-    qvm.add_c_code(f.read(), ["../sdk/cgame", "../sdk/game"])
+qvm = Qvm(DIR.joinpath("../../orig_vms/cgame.qvm"), symbols)
+with open(DIR.joinpath("cgame.c"), "r") as f:
+    qvm.add_c_code(f.read(), [DIR.joinpath("../sdk/cgame"), DIR.joinpath("../sdk/game")])
 
 for sym in qvm.symbols:
     i = sym.rfind("_Hook")
     if i >= 0:
         qvm.replace_calls(sym[:i], sym)
 
-qvm.write("cgame.qvm", forge_crc=True)
+qvm.write(DIR.joinpath("../../build/cgame.qvm"), forge_crc=True)

@@ -1,6 +1,8 @@
-from quatch import Qvm
-from quatch.instruction import Opcode
+from quatch import Qvm, Opcode
 from json import load as load_json
+from pathlib import PurePath
+
+DIR = PurePath(__file__).parent
 
 symbols = {
     # DATA
@@ -23,12 +25,12 @@ symbols = {
     "VectorNormalize": 0x9c59,
     "G_Printf": 0x96
 }
-with open("syscalls.json", "r") as f:
+with open(DIR.joinpath("syscalls.json"), "r") as f:
     symbols.update(load_json(f))
 
-qvm = Qvm("../../vms/DF 1.91.27/qagame.qvm", symbols)
+qvm = Qvm(DIR.joinpath("../../orig_vms/qagame.qvm"), symbols)
 with open("qagame.c", "r") as f:
-    qvm.add_c_code(f.read(), ["../sdk/cgame", "../sdk/game"])
+    qvm.add_c_code(f.read(), [DIR.joinpath("../sdk/cgame"), DIR.joinpath("../sdk/game")])
 
 for sym in qvm.symbols:
     i = sym.rfind("_Hook")
@@ -40,4 +42,4 @@ assert(inst.opcode == Opcode.CONST and inst.operand ==
        symbols["target_laser_think"])
 inst.operand = qvm.symbols["target_laser_think_Hook"]
 
-qvm.write("qagame.qvm", forge_crc=True)
+qvm.write(DIR.joinpath("../../build/qagame.qvm"), forge_crc=True)
