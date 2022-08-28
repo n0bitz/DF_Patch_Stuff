@@ -12,16 +12,19 @@ symbols = {
     "atoi": 0x2f523,
     "AxisClear": 0x30e90,
     "CG_ConsoleCommand": 0x1acf4,
+    "CG_ProcessSnapshots": 0x291f9,
     "CG_Beam": 0x1ee8b,
     "CG_Grapple": 0x1eda6,
     "CG_Init": 0xdb9,
     "CG_InitConsoleCommands": 0x1ad32,
+    "CG_DrawActive": 0x1cd8b,
     "CG_Printf": 0x23c,
     "DecryptTimer": 0x5f5e,
     "SomeNoDrawRadiusChecks": 0x9bb2,
     "Q_stricmp": 0x324d6,
     "strlen": 0x2f1b8,
-    "vsprintf": 0x2f8c7
+    "vsprintf": 0x2f8c7,
+    "AnglesToAxis": 0x30e5b
 }
 
 with open(DIR.joinpath("syscalls.json"), "r") as f:
