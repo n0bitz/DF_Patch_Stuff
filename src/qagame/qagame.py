@@ -30,8 +30,8 @@ with open(DIR.joinpath("syscalls.json"), "r") as f:
     symbols.update(load_json(f))
 
 qvm = Qvm(DIR.joinpath("../../orig_vms/qagame.qvm"), symbols)
-with open("qagame.c", "r") as f:
-    qvm.add_c_code(f.read(), [DIR.joinpath("../sdk/cgame"), DIR.joinpath("../sdk/game")])
+with open(DIR.joinpath("qagame.c"), "r") as f:
+    qvm.add_c_code(f.read(), [DIR, DIR.joinpath("../sdk/cgame"), DIR.joinpath("../sdk/game")])
 
 for sym in qvm.symbols:
     i = sym.rfind("_Hook")

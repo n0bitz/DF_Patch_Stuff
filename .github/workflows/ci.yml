@@ -16,10 +16,7 @@ jobs:
           python-version: '>=3.7'
           cache: 'pip'
       - run: pip install -r requirements.txt
-      - name: Build cgame patches
-        run: python src/cgame/cgame.py
-      - name: Build qagame patches
-        run: python src/qagame/qagame.py
+      - run: python build.py
       - name: Create nightly tag
         uses: richardsimko/update-tag@v1
         with:
@@ -33,6 +30,4 @@ jobs:
           body: Download the latest patched VMs.
           prerelease: true
           fail_on_unmatched_files: true
-          files: |
-            build/qagame.qvm
-            build/cgame.qvm
+          files: build/zzzzz-patched-vms.pk3
