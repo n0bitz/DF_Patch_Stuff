@@ -31,10 +31,10 @@ void CG_SaveState_f(void)
 #define DUMP_AND_SET(array, type, prefix, str)                         \
     do                                                                 \
     {                                                                  \
-        len = DF_sprintf(set_cmd_str, "set %s_%s", (prefix), (str));      \
+        len = sprintf(set_cmd_str, "set %s_%s", (prefix), (str));      \
         for (i = 0; i < sizeof((array)) / sizeof((array)[0]); i++)     \
-            len += DF_sprintf(set_cmd_str + len, " %" #type, (array)[i]); \
-        DF_sprintf(set_cmd_str + len, "\n");                              \
+            len += sprintf(set_cmd_str + len, " %" #type, (array)[i]); \
+        sprintf(set_cmd_str + len, "\n");                              \
         trap_SendConsoleCommand(set_cmd_str);                          \
     } while (0);
 
@@ -70,28 +70,16 @@ void CG_SaveState_f(void)
     DUMP_AND_SET(misc, i, savestatename, "misc");
 #undef DUMP_AND_SET
 
-    DF_sprintf(set_cmd_str, "set %s silent varCommand restorestate $%s_pos $%s_angles $%s_vel $%s_time $%s_weapon $%s_ammo $%s_items $%s_misc\n",
+    sprintf(set_cmd_str, "set %s silent varCommand restorestate $%s_pos $%s_angles $%s_vel $%s_time $%s_weapon $%s_ammo $%s_items $%s_misc\n",
             savestatename, savestatename, savestatename, savestatename, savestatename, savestatename, savestatename, savestatename, savestatename);
     trap_SendConsoleCommand(set_cmd_str);
     CG_Printf("^2Saved\n");
-}
-
-void CG_RestoreState_f(void)
-{
-    char buf[MAX_TOKEN_CHARS];
-
-    trap_Argv(12, buf, sizeof(buf));
-    cg.weaponSelect = atoi(buf);
-    cg.weaponSelectTime = cg.time; // probably isn't needed
-    // send the weapon we want to restore not the old one
-    trap_SetUserCmdValue(cg.weaponSelect, cg.zoomSensitivity);
 }
 
 void CG_InitConsoleCommands_H00K(void)
 {
     CG_InitConsoleCommands();
     trap_AddCommand("savestate");
-    trap_AddCommand("restorestate");
     DF_InitRecallCommands();
 }
 
@@ -111,10 +99,7 @@ qboolean CG_ConsoleCommand_H00K(void)
         CG_SaveState_f();
         return qtrue;
     }
-    // intercept but let it pass to the server after we're done
-    if (!Q_stricmp(cmd, "restorestate"))
-        CG_RestoreState_f();
-    else if (!Q_stricmp(cmd, "kill"))
+    if (!Q_stricmp(cmd, "kill"))
         return DF_RestoreRecall();
     return qfalse;
 }

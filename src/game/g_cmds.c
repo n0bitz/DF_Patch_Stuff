@@ -88,6 +88,7 @@ void Cmd_RestoreState_f(gentity_t *ent)
 #undef PARSE_ARG
 
     DF_PlacePlayerTeleport(ent, origin, angles, velocity);
+    ps->persistant[PERS_SPAWN_COUNT]++; // force client to accept changes via CG_Respawn
     trap_SendServerCommand(ent - g_entities, "print \"^3Restored\n\"");
 }
 

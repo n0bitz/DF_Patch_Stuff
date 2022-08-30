@@ -123,14 +123,14 @@ qboolean DF_RestoreRecall(void) {
     int len;
 
     if (!is_recalling || team == TEAM_SPECTATOR) return qfalse;
-    len = DF_sprintf(buf, "restorestate");
+    len = sprintf(buf, "restorestate");
 // HELL AWAITS ME
 #define xx(array, type, prefix)                                    \
     do                                                                 \
     {                                                                   \
         int i;                                                  \
         for (i = 0; i < sizeof((array)) / sizeof((array)[0]); i++)     \
-            len += DF_sprintf(buf + len, " %" #type, (array)[i]); \
+            len += sprintf(buf + len, " %" #type, (array)[i]); \
     } while (0);
 
     xx(recall_state->origin, f, buf);
@@ -152,8 +152,7 @@ qboolean DF_RestoreRecall(void) {
     xx(&recall_state->dj_time, i, buf);
     xx(&recall_state->djing, i, buf);
 #undef xx
-    DF_sprintf(buf + len, "\n");
+    sprintf(buf + len, "\n");
     trap_SendConsoleCommand(buf);
     return qtrue;
-
 }

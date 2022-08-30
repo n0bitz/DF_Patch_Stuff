@@ -13,7 +13,6 @@
 		CG_InitConsoleCommands: 0x1ad32,
 		CG_ConsoleCommand: 0x1acf4,
 		SomeNoDrawRadiusChecks: 0x9bb2,
-		DF_sprintf: 0x77b6,
 		DecryptTimer: 0x5f5e,
 		CG_Init: 0xdb9,
 		CG_Printf: 0x23c,

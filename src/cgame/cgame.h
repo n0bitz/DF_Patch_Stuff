@@ -4,8 +4,10 @@
 extern int decrypted_timer;
 extern void CG_Grapple(centity_t *);
 extern qboolean SomeNoDrawRadiusChecks(centity_t *);
-int DF_sprintf(char *, const char *, ...);
 int DecryptTimerWithoutAlteringTheGlobal(snapshot_t *);
+
+// misc.c
+int sprintf(char *, const char *, ...);
 
 // cg_recall.c
 qboolean DF_RestoreRecall(void);
