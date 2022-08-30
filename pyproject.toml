@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "df_patch_stuff"
+version = "0.0.1"
+description = "Patches for DeFRaG"
+authors = ["Josh Steffen <josh@joshsteffen.com>", "Krishna Ravishankar <krishna.ravi732@gmail.com>"]
+license = "GPLv2"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+json5 = "^0.9.10"
+quatch = {git = "https://github.com/birdstakes/quatch"}
+
+[tool.poetry.dev-dependencies]
+black = "^22.6.0"
+
+[tool.black]
+line-length = 120
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
