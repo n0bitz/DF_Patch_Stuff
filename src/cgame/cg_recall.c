@@ -36,8 +36,25 @@ void seek_recall(int base_idx, int offset) {
     if (recall_frame_idx < 0) recall_frame_idx += base_idx + recall_states.size;
 }
 
-void DF_InitRecallBuffer(void) { // TODO: maybe call this when we worry about maps and files and stuff?
+void DF_InitRecall(void) {
+    fileHandle_t recall_file;
+
     memset(&recall_states, 0, sizeof(recall_states));
+    trap_FS_FOpenFile("TODO", &recall_file, FS_READ);
+    if (recall_file) {
+        trap_FS_Read(&recall_states, sizeof(recall_states), recall_file);
+        trap_FS_FCloseFile(recall_file);
+    }
+}
+
+void DF_ShutdownRecall(void) {
+    fileHandle_t recall_file;
+
+    trap_FS_FOpenFile("TODO", &recall_file, FS_WRITE);
+    if (recall_file) {
+        trap_FS_Write(&recall_states, sizeof(recall_states), recall_file);
+        trap_FS_FCloseFile(recall_file);
+    } else CG_Printf("^1ERROR: couldn't write to recall file\n");
 }
 
 void DF_InitRecallCommands(void) {

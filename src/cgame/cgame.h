@@ -10,6 +10,8 @@ int DecryptTimerWithoutAlteringTheGlobal(snapshot_t *);
 int sprintf(char *, const char *, ...);
 
 // cg_recall.c
+void DF_InitRecall(void);
+void DF_ShutdownRecall(void);
 qboolean DF_RestoreRecall(void);
 void DF_RecallUpdateKeys(void);
 void DF_RenderRecallState(void);

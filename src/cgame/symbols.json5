@@ -14,6 +14,7 @@
 		CG_ConsoleCommand: 0x1acf4,
 		SomeNoDrawRadiusChecks: 0x9bb2,
 		DecryptTimer: 0x5f5e,
+		CG_Shutdown: 0xf2e,
 		CG_Init: 0xdb9,
 		CG_Printf: 0x23c,
 		// SYSCALLS
