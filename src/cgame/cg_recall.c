@@ -23,12 +23,18 @@ typedef struct {
 
 typedef struct {
     int idx;
-    recallState_t buf[7777]; // TODO: idk
+    int size;
+    recallState_t buf[60*1000/8]; // TODO: idk
 } recallRingBuf_t;
 
 recallRingBuf_t recall_states;
 static qboolean is_recalling;
 static int recall_frame_idx = 0;
+
+void seek_recall(int base_idx, int offset) {
+    recall_frame_idx = (base_idx + offset) % recall_states.size;
+    if (recall_frame_idx < 0) recall_frame_idx += base_idx + recall_states.size;
+}
 
 void DF_InitRecallBuffer(void) { // TODO: maybe call this when we worry about maps and files and stuff?
     memset(&recall_states, 0, sizeof(recall_states));
@@ -75,6 +81,8 @@ void DF_AddRecallState(void)
 {
     if (is_recalling) return;
     DF_MakeRecallState(&recall_states.buf[recall_states.idx]);
+    if (recall_states.size < sizeof(recall_states.buf) / sizeof(recall_states.buf[0]))
+        recall_states.size += 1;
     recall_states.idx = (recall_states.idx + 1) % (sizeof(recall_states.buf) / sizeof(recall_states.buf[0]));
 }
 
@@ -105,13 +113,13 @@ void DF_RecallUpdateKeys(void) {
     trap_GetUserCmd(trap_GetCurrentCmdNumber(), &cmd);
     if (cmd.serverTime == commandTime) return; // NOTE: is this even possible?
     commandTime = cmd.serverTime;
-    if (cmd.buttons & BUTTON_SEEK_FWD) recall_frame_idx = (recall_frame_idx + 1) % (sizeof(recall_states.buf) / sizeof(recall_states.buf[0]));
-    else if (cmd.buttons & BUTTON_SEEK_BWD) recall_frame_idx = (recall_frame_idx - 1) % (sizeof(recall_states.buf) / sizeof(recall_states.buf[0]));
+    if (cmd.buttons & BUTTON_SEEK_FWD) seek_recall(recall_frame_idx, +1);
+    else if (cmd.buttons & BUTTON_SEEK_BWD) seek_recall(recall_frame_idx, -1);
 }
 
 void CG_Recall_f(void) {
     is_recalling = !is_recalling;
-    recall_frame_idx = recall_states.idx;
+    seek_recall(recall_states.idx, -1);
     CG_Printf("Recall Mode: %s\n", (is_recalling) ? "ON" : "OFF");
 }
 
