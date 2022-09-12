@@ -88,7 +88,7 @@ void DF_MakeRecallState(recallState_t *out) {
     out->health = ps->stats[STAT_HEALTH];
     out->armor = ps->stats[STAT_ARMOR];
     out->frags = ps->persistant[PERS_SCORE];
-    out->pm_flags = ps->pm_flags;
+    out->pm_flags = ps->pm_flags & ~PMF_FOLLOW;
     out->pm_time = ps->pm_time;
     out->dj_time = ps->stats[STAT_JUMPTIME];
     out->djing = ps->stats[STAT_DJING];

@@ -76,10 +76,22 @@ void CG_SaveState_f(void)
     CG_Printf("^2Saved\n");
 }
 
+void CG_RestoreState_f(void)
+{
+    char buf[MAX_TOKEN_CHARS];
+
+    trap_Argv(12, buf, sizeof(buf));
+    cg.weaponSelect = atoi(buf);
+    cg.weaponSelectTime = cg.time; // probably isn't needed
+    // send the weapon we want to restore not the old one
+    trap_SetUserCmdValue(cg.weaponSelect, cg.zoomSensitivity);
+}
+
 void CG_InitConsoleCommands_H00K(void)
 {
     CG_InitConsoleCommands();
     trap_AddCommand("savestate");
+    trap_AddCommand("restorestate");
     DF_InitRecallCommands();
 }
 
@@ -99,7 +111,10 @@ qboolean CG_ConsoleCommand_H00K(void)
         CG_SaveState_f();
         return qtrue;
     }
-    if (!Q_stricmp(cmd, "kill"))
+    // intercept these but let them pass to the server after we're done
+    if (!Q_stricmp(cmd, "restorestate"))
+        CG_RestoreState_f();
+    else if (!Q_stricmp(cmd, "kill"))
         return DF_RestoreRecall();
     return qfalse;
 }
