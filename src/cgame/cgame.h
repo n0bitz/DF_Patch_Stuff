@@ -17,3 +17,8 @@ void DF_RecallUpdateKeys(void);
 void DF_RenderRecallState(void);
 void DF_AddRecallState(void);
 void DF_InitRecallCommands(void);
+
+// custom stuff
+// entityState_t->generic1
+#define GEN1_NOTVQ3 (1 << 6)
+#define GEN1_NOTCPM (1 << 7)

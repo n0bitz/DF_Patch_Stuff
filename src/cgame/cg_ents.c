@@ -51,3 +51,13 @@ void CG_Beam_H00K(centity_t *cent)
     // add to refresh list
     trap_R_AddRefEntityToScene(&ent);
 }
+
+void CG_AddCEntity_H00K(centity_t *cent) {
+    if ( cent->currentState.eType >= ET_EVENTS ) {
+		return;
+    }
+    if ( cent->currentState.generic1 & ((cg.snap->ps.pm_flags & PMF_PROMODE) ? GEN1_NOTCPM : GEN1_NOTVQ3) ) {
+        return;
+    }
+    CG_AddCEntity(cent);
+}

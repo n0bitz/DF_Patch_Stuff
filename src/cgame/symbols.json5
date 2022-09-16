@@ -7,6 +7,8 @@
 		atoi: 0x2f523,
 		strlen: 0x2f1b8,
 		CG_ProcessSnapshots: 0x291f9,
+		CG_BuildSolidList: 0x27051,
+		CG_AddCEntity: 0x1f18d,
 		CG_Beam: 0x1ee8b,
 		CG_Grapple: 0x1eda6,
 		CG_DrawActive: 0x1cd8b,
@@ -14,6 +16,8 @@
 		CG_ConsoleCommand: 0x1acf4,
 		SomeNoDrawRadiusChecks: 0x9bb2,
 		DecryptTimer: 0x5f5e,
+		IsItemEntityAvailableToClient: 0x4de3,
+		DF_1e1f: 0x1e1f,
 		CG_Shutdown: 0xf2e,
 		CG_Init: 0xdb9,
 		CG_Printf: 0x23c,
@@ -121,7 +125,14 @@
 		acos: -112
 	},
     data: {
+		cg_numSolidEntities: 0x30a3b4,
+		cg_solidEntities: 0x309fb4,
+		cg_numTriggerEntities: 0x309fb0,
+		cg_triggerEntities: 0x309bb0,
 		decrypted_timer: 0x11d31c,
+		defrag_obs: 0x11cee4,
+		df_promode: 0x11cee0,
 		cg: 0xcfc28,
+		cg_entities: 0x19c28
 	}
 }
